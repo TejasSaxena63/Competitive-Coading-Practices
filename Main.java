@@ -1,5 +1,6 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
+import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -9,34 +10,31 @@ public class Main {
 
         while (t-- > 0) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            long n = Long.parseLong(st.nextToken());
-            long k = Long.parseLong(st.nextToken());
+            long a = Long.parseLong(st.nextToken());
+            long b = Long.parseLong(st.nextToken());
 
-            long ans;
-            if (k >= n) {
-                ans = n;
-            } else {
-                ans = k;                 // each of the k numbers starts as "1"
-                long remaining = n - k;  // leftover budget to spend on upgrades
-                int level = 1;
+            int layers = 0;
+            long size = 1;
+            long white = a, dark = b;
 
-                while (remaining > 0) {
-                    long costPerNumber = 1L << level;      // 2^level
-                    long fullRoundCost = k * costPerNumber;
-
-                    if (fullRoundCost <= remaining) {
-                        remaining -= fullRoundCost;
-                        ans += k;
-                        level++;
-                    } else {
-                        long howMany = remaining / costPerNumber;
-                        ans += howMany;
-                        break;
-                    }
+            while (true) {
+                boolean useWhite = (layers % 2 == 0);
+                if (useWhite) {
+                    if (white >= size) {
+                        white -= size;
+                        layers++;
+                        size *= 2;
+                    } else break;
+                } else {
+                    if (dark >= size) {
+                        dark -= size;
+                        layers++;
+                        size *= 2;
+                    } else break;
                 }
             }
 
-            sb.append(ans).append('\n');
+            sb.append(layers).append("\n");
         }
 
         System.out.print(sb);
